@@ -39,7 +39,11 @@ jobs:
           fi
                    
           # Put each directory in a JSON array
-          CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
+          if [ -z "$CHANGED_DIRS" ]; then
+            CHANGED_DIRS_JSON="[]"
+          else
+            CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
+          fi
           echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
           echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
   build-container:
@@ -72,4 +76,4 @@ jobs:
           context: .
           file: ${{ matrix.CONTAINER_DIR }}/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.CONTAINER_DIR }}
