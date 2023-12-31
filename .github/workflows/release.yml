@@ -47,6 +47,7 @@ jobs:
           echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
           echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
   build-container:
+    if: ${{ needs.get-changed-containers.outputs.CHANGED_DIRS_JSON != '[]' }}
     needs:
       - get-changed-containers
     runs-on: ubuntu-22.04
