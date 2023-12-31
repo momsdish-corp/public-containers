@@ -1,0 +1,76 @@
+name: 'Release Image'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: pull-request-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  get-changed-containers:
+    timeout-minutes: 3
+    runs-on: ubuntu-22.04
+    outputs:
+      CHANGED_DIRS_JSON: ${{ steps.changed-dirs.outputs.CHANGED_DIRS_JSON }}
+
+    steps:
+      - name: Checkout files
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Get list of changed directories
+        id: changed-dirs
+        run: |
+          # Get the changed directories, one per line, excluding .github
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} ':!/.github/**')
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u)
+          echo "Changed dirs: $CHANGED_DIRS"
+          
+          # Require no spaces in directory names
+          if [[ "$changed_dirs" =~ \  ]]; then
+            echo "ERROR: Directory names cannot contain spaces"
+            exit 1
+          fi
+                   
+          # Put each directory in a JSON array
+          CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
+          echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
+          echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
+  build-container:
+    needs:
+      - get-changed-containers
+    runs-on: ubuntu-22.04
+    timeout-minutes: 6
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        CONTAINER_DIR: ${{ fromJson(needs.get-changed-containers.outputs.CHANGED_DIRS_JSON) }}
+    steps:
+      - name: Checkout files
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Log in to the container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push the container image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ${{ matrix.CONTAINER_DIR }}/Dockerfile
+          push: true
+          tags: ghcr.io/${{ github.repository }}:latest
