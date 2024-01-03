@@ -1,5 +1,8 @@
-FROM homebrew/brew:latest
+FROM rust:1-slim-buster
 LABEL org.opencontainers.image.source="https://github.com/momsdish-corp/public-containers"
 
-RUN brew update \
-    && brew install curl htmlq
+RUN apt-get update && \
+    apt-get install -y curl && \
+    cargo install htmlq && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archivesdoc
