@@ -23,5 +23,3 @@ else
   echo "Zstd test failed!"
   exit 1
 fi
-
-cat /etc/mydumper.cnf
