@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
     volumes:
       - './test.sh:/usr/local/bin/entrypoint.sh:ro'
     entrypoint: [ '/bin/sh', '/usr/local/bin/entrypoint.sh' ]

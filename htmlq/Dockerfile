@@ -1,4 +1,4 @@
-FROM rust:1-slim-buster
+FROM --platform=linux/amd64 rust:1-slim-bookworm
 LABEL org.opencontainers.image.source="https://github.com/momsdish-corp/public-containers"
 
 RUN apt-get update && \

@@ -34,7 +34,7 @@ jobs:
         run: |
           # Get the changed directories, one per line, excluding .github
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} ':!/.github/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ '{print $1}' | sort -u)
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>1{print $1}' | sort -u)
           echo "Changed dirs: $CHANGED_DIRS"
           
           # Require no spaces in directory names
