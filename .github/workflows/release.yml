@@ -70,8 +70,8 @@ jobs:
       - name: Build & push the container image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ${{ matrix.CONTAINER_DIR }}/Dockerfile
+          context: ${{ matrix.CONTAINER_DIR }}/
+          file: Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository }}:${{ matrix.CONTAINER_DIR }}
           platforms: linux/amd64

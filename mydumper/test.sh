@@ -24,7 +24,4 @@ else
   exit 1
 fi
 
-mydumper
-myloader
-
 cat /etc/mydumper.cnf
