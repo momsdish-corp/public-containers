@@ -14,7 +14,6 @@ RUN apt-get update && \
     apt-get install -y libatomic1 && \
     apt-get install -y libglib2.0-0 && \
     apt-get install -y libpcre3 && \
-    apt-get install -y libssl1.1 && \
     apt-get install -y zstd && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archivesdoc
