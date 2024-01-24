@@ -6,3 +6,8 @@ RUN apt-get update && \
     cargo install htmlq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archivesdoc
+
+# Entrypoint
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 555 /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
