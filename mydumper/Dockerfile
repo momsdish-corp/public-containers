@@ -22,3 +22,8 @@ RUN apt-get update && \
 RUN curl --remote-name --location https://github.com/mydumper/mydumper/releases/download/v${PKG_RELEASE}/mydumper_${PKG_RELEASE}.${LSB_RELEASE}_amd64.deb && \
     dpkg -i mydumper_${PKG_RELEASE}.${LSB_RELEASE}_${ARCH}.deb && \
     rm -rf mydumper_${PKG_RELEASE}.${LSB_RELEASE}_${ARCH}.deb
+
+# Entrypoint
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 555 /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
