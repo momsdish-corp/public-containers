@@ -7,6 +7,13 @@ services:
       dockerfile: Dockerfile
       platforms:
         - linux/amd64
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_HOST=localhost
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=
+      - VERBOSE=2
     volumes:
-      - './test.sh:/usr/local/bin/entrypoint.sh:ro'
-    entrypoint: [ '/bin/sh', '/usr/local/bin/entrypoint.sh' ]
+      - './test.sh:/usr/local/bin/test.sh:ro'
+    command: [ '/bin/sh', '/usr/local/bin/test.sh' ]
