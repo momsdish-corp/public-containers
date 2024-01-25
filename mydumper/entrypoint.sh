@@ -45,7 +45,7 @@ echo "[myloader]" >> /etc/mydumper.cnf
 
 # Filter by the database to restore
 [[ -n "${MYSQL_DATABASE}"  ]] && \
-  echo "source = ${MYSQL_DATABASE}" >> /etc/mydumper.cnf  
+  echo "source-db = ${MYSQL_DATABASE}" >> /etc/mydumper.cnf
 
 echo ""
 exec "$@"
