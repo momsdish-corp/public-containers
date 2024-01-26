@@ -89,7 +89,7 @@ jobs:
               # If the line starts with '- ', it's a tag
                 if [[ $line =~ ^- ]]; then
                     # Remove a dash, followed by any number of spaces
-                    TAG_NAME=$(echo "$line" | sed -e 's/^- *//' -e 's/"//g' -e "s/'//g")
+                    line=$(echo "$line" | sed -e 's/^- *//' -e 's/"//g' -e "s/'//g")
                     # Validate the tag (allowed formats x, x.x, x.x.x)
                     if [[ ! $line =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
                         echo "ERROR: $line is not a valid tag in $TAGS_FILE"
@@ -97,9 +97,9 @@ jobs:
                     fi
                     # Append a newline character before each tag, except for the first one
                     if [ -z "$TAGS" ]; then
-                        TAGS="$TAG_NAME"
+                        TAGS="$line"
                     else
-                      TAGS="$TAGS\n$TAG_NAME"
+                      TAGS="$TAGS\n$line"
                     fi
                 fi
           done < $TAGS_FILE
