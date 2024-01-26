@@ -24,8 +24,8 @@ jobs:
         id: changed-dirs
         run: |
           # Get the changed directories in ./containers/*, one per line
-          CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD './containers/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>1{$NF=""; print $0}' | sort -u)
+          CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD './containers/*/*/**')
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>3 {print $1"/"$2"/"$3}' | sort -u)
           echo "Changed dirs: $CHANGED_DIRS"
           
           # Require no spaces in directory names
@@ -67,11 +67,86 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Define Image Tags
+        run: |
+          # Make sure the directory is ./containers/<container>/<version>
+          if [[ ! ${{ matrix.CONTAINER_DIR }} =~ ^containers/[^/]+/[^/]+$ ]]; then
+              echo "ERROR: CONTAINER_DIR is invalid"
+              exit 1
+          fi
+          
+          # Require file ./containers/<container>/<version>/tags.yaml
+          TAGS_FILE="${{ matrix.CONTAINER_DIR }}/tags.yaml"
+          if [ ! -f "$TAGS_FILE" ]; then
+              echo "ERROR: $TAGS_FILE not found"
+              exit 1
+          fi
+          
+          # Populate tags, one per line
+          # for each line in tags.yaml, loop
+          TAGS=""
+          while IFS= read -r line; do
+              # If the line starts with '- ', it's a tag
+                if [[ $line =~ ^- ]]; then
+                    # Remove a dash, followed by any number of spaces
+                    TAG_NAME=$(echo "$line" | sed -e 's/^- *//' -e 's/"//g' -e "s/'//g")
+                    # Validate the tag (allowed formats x, x.x, x.x.x)
+                    if [[ ! $line =~ ^[0-9]+(\.[0-9]+){0,2}$ ]]; then
+                        echo "ERROR: $line is not a valid tag in $TAGS_FILE"
+                        exit 1
+                    fi
+                    # Append a newline character before each tag, except for the first one
+                    if [ -z "$TAGS" ]; then
+                        TAGS="$TAG_NAME"
+                    else
+                      TAGS="$TAGS\n$TAG_NAME"
+                    fi
+                fi
+          done < $TAGS_FILE
+          
+          # Require at least one tag
+          if [ -z "$TAGS" ]; then
+              echo "ERROR: No tags found in $TAGS_FILE"
+              exit 1
+          fi
+          
+          # Get the version from the directory name
+          VERSION=$(basename ${{ matrix.CONTAINER_DIR }})
+          
+          # Require one of the tags to match the version
+          if [[ ! $TAGS =~ (^|\n)$VERSION($|\n) ]]; then
+              echo "ERROR: $VERSION not found in $TAGS_FILE. The directory name must match one of the tags.
+              exit 1
+          fi
+          
+          # Get the container name from the directory name
+          CONTAINER=$(basename $(dirname ${{ matrix.CONTAINER_DIR }}))
+          
+          # If the version is highest, add the latest tag
+          DIRS=$(ls -d */ | grep -v $VERSION)
+          for DIR in $DIRS; do
+              if [[ $DIR > $VERSION ]]; then
+                  TAGS="$TAGS\nlatest"
+              fi
+          done
+          
+          # Build tags, comma separated
+          IMAGE_TAGS=""
+          while IFS= read -r line; do
+              # Append a newline character before each tag, except for the first one
+              if [ -z "$IMAGE_TAGS" ]; then
+                  IMAGE_TAGS="ghcr.io/${{ github.repository }}:$CONTAINER-$line"
+              else
+                  IMAGE_TAGS="$IMAGE_TAGS,ghcr.io/${{ github.repository }}:$CONTAINER-$line"
+              fi
+          done <<< "$TAGS"
+          
+          echo "IMAGE_TAGS=$IMAGE_TAGS" >> $GITHUB_ENV
       - name: Build & push the container image
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.CONTAINER_DIR }}
-          file: containers/${{ matrix.CONTAINER_DIR }}/Dockerfile
+          file: ${{ matrix.CONTAINER_DIR }}/Dockerfile
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.CONTAINER_DIR }}
+          tags: ${{ env.IMAGE_TAGS }}
           platforms: linux/amd64

@@ -33,8 +33,8 @@ jobs:
         id: changed-dirs
         run: |
           # Get the changed directories in /containers/*, one per line
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>1{$NF=""; print $0}' | sort -u)
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/*/*/**')
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>3 {print $1"/"$2"/"$3}' | sort -u)
           echo "Changed dirs: $CHANGED_DIRS"
           
           # Require no spaces in directory names
@@ -49,6 +49,7 @@ jobs:
           else
             CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
           fi
+          # Returns /containers/<container>/<version> for each changed directory
           echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
           echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
   test-container:
@@ -70,6 +71,6 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
       - name: Run Docker Compose
         run: |
-          cd containers/${{ matrix.CONTAINER_DIR }}
+          cd ${{ matrix.CONTAINER_DIR }}
           echo "Running docker compose up --build --abort-on-container-exit"
           docker compose up --build --abort-on-container-exit
