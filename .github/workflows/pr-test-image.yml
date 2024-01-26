@@ -34,7 +34,7 @@ jobs:
         run: |
           # Get the changed directories in /containers/*, one per line
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/*/*/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>2{print $0}' | sort -u)
+          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>3 {print $1"/"$2"/"$3}' | sort -u)
           echo "Changed dirs: $CHANGED_DIRS"
           
           # Require no spaces in directory names
