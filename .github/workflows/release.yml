@@ -115,7 +115,7 @@ jobs:
           
           # Require one of the tags to match the version
           if [[ ! $TAGS =~ (^|\n)$VERSION($|\n) ]]; then
-              echo "ERROR: $VERSION not found in $TAGS_FILE. The directory name must match one of the tags.
+              echo "ERROR: $VERSION not found in $TAGS_FILE. The directory name must match one of the tags."
               exit 1
           fi
           
