@@ -32,7 +32,7 @@ jobs:
       - name: Get list of changed directories
         id: changed-dirs
         run: |
-          # Get the changed directories, one per line, excluding .github
+          # Get the changed directories in /containers/*, one per line
           CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/**')
           CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>1{$NF=""; print $0}' | sort -u)
           echo "Changed dirs: $CHANGED_DIRS"
