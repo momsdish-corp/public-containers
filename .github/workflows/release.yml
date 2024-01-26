@@ -141,6 +141,9 @@ jobs:
               fi
           done <<< "$(echo -e "$TAGS")"
           
+          # Print the tags
+          echo "TAGS=$TAGS"
+          
           echo "IMAGE_TAGS=$IMAGE_TAGS" >> $GITHUB_ENV
       - name: Build & push the container image
         uses: docker/build-push-action@v5
