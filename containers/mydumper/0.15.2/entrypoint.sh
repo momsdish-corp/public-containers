@@ -43,9 +43,5 @@ echo "[myloader]" >> /etc/mydumper.cnf
 [[ -n "${MYSQL_PASSWORD}"  ]] && \
   echo "password = ${MYSQL_PASSWORD}" >> /etc/mydumper.cnf  
 
-# Filter by the database to restore
-[[ -n "${MYSQL_DATABASE}"  ]] && \
-  echo "source-db = ${MYSQL_DATABASE}" >> /etc/mydumper.cnf
-
 echo ""
 exec "$@"
