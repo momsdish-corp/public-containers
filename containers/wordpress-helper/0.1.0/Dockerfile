@@ -68,7 +68,7 @@ RUN ARCH=$(uname -m) && \
     mkdir -p /opt/bitnami/app/.devspace && \
     chmod 777 /opt/bitnami/app/.devspace
 
-COPY --chown=daemon:root --chmod=755 images/helper/app/ /opt/bitnami/app/
+COPY --chown=daemon:root --chmod=755 devspace.yaml /opt/bitnami/app/devspace.yaml
 
 WORKDIR /opt/bitnami/app
 
