@@ -24,15 +24,24 @@ jobs:
         id: changed-dirs
         run: |
           # Get the changed directories in ./containers/*, one per line
-          CHANGED_FILES=$(git diff --name-only HEAD~1..HEAD './containers/*/*/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>3 {print $1"/"$2"/"$3}' | sort -u)
-          echo "Changed dirs: $CHANGED_DIRS"
+          FOUND_FILES=$(git diff --name-only HEAD~1..HEAD './containers/*/*/**')
+          FOUND_DIRS=$(echo "$FOUND_FILES" | awk -F/ 'NF>3 {print $1"/"$2"/"$3}' | sort -u)
+          echo "Found dirs: $FOUND_DIRS"
           
           # Require no spaces in directory names
-          if [[ "$changed_dirs" =~ \  ]]; then
+          if [[ "$FOUND_DIRS" =~ \  ]]; then
             echo "ERROR: Directory names cannot contain spaces"
             exit 1
           fi
+          
+          # Filter out non-existing directories
+          CHANGED_DIRS=""
+          while IFS= read -r dir; do
+            if [ -d "$dir" ]; then
+              CHANGED_DIRS="$CHANGED_DIRS\n$dir"
+            fi
+          done <<< "$FOUND_DIRS"
+          echo "Changed dirs: $CHANGED_DIRS"
                    
           # Put each directory in a JSON array
           if [ -z "$CHANGED_DIRS" ]; then
