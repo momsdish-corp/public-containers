@@ -38,7 +38,7 @@ jobs:
           CHANGED_DIRS=""
           while IFS= read -r dir; do
             if [ -d "$dir" ]; then
-              CHANGED_DIRS="$CHANGED_DIRS\n$dir"
+              [ -z "$CHANGED_DIRS" ] && CHANGED_DIRS="$dir" || CHANGED_DIRS="$CHANGED_DIRS $dir"
             fi
           done <<< "$FOUND_DIRS"
           echo "Changed dirs: $CHANGED_DIRS"
