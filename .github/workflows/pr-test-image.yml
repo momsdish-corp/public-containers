@@ -33,34 +33,34 @@ jobs:
         id: changed-dirs
         run: |
           # Get the changed directories in /containers/*, one per line
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/*/**')
-          CHANGED_DIRS=$(echo "$CHANGED_FILES" | awk -F/ 'NF>2 {print $1"/"$2"/"$3}' | sort -u)
-          echo "Changed dirs: $CHANGED_DIRS"
+          FOUND_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...origin/${{ github.event.pull_request.head.ref }} './containers/*/**')
+          FOUND_DIRS=$(echo "$FOUND_FILES" | awk -F/ 'NF>2 {print $1"/"$2"/"$3}' | sort -u)
+          echo "Found dirs: $FOUND_DIRS"
           
           # Require no spaces in directory names
-          if [[ "$CHANGED_DIRS" =~ \  ]]; then
+          if [[ "$FOUND_DIRS" =~ \  ]]; then
             echo "ERROR: Directory names cannot contain spaces"
             exit 1
           fi
           
           # Filter out non-existing directories
-          EXISTING_DIRS=""
+          CHANGED_DIRS=""
           while IFS= read -r dir; do
             if [ -d "$dir" ]; then
-              EXISTING_DIRS="$EXISTING_DIRS\n$dir"
+              CHANGED_DIRS="$CHANGED_DIRS\n$dir"
             fi
-          done <<< "$CHANGED_DIRS"
-          echo "Existing dirs: $EXISTING_DIRS"
+          done <<< "$FOUND_DIRS"
+          echo "Changed dirs: $CHANGED_DIRS"
                    
           # Put each directory in a JSON array
-          if [ -z "$EXISTING_DIRS" ]; then
-            EXISTING_DIRS_JSON="[]"
+          if [ -z "$CHANGED_DIRS" ]; then
+            CHANGED_DIRS_JSON="[]"
           else
-            EXISTING_DIRS_JSON=$(echo -e "$EXISTING_DIRS" | jq -R . | jq -cs .)
+            CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
           fi
           # Returns /containers/<container>/<version> for each changed directory
-          echo "EXISTING_DIRS_JSON=$EXISTING_DIRS_JSON" >> $GITHUB_OUTPUT
-          echo "Changed dirs JSON: $EXISTING_DIRS_JSON"
+          echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
+          echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
   test-container:
     if: ${{ needs.get-changed-containers.outputs.CHANGED_DIRS_JSON != '[]' }}
     needs:
