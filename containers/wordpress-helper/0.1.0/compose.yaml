@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    volumes:
+      - './test.sh:/usr/local/bin/test.sh:ro'
+    entrypoint: [ '/bin/sh', '/usr/local/bin/test.sh' ]

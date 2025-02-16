@@ -1,0 +1,10 @@
+version: v2beta1
+name: devspace
+
+imports:
+  - git: https://github.com/momsdish-corp/public-devspace.git
+    branch: main
+    subPath: v2/s3.yaml
+  - git: https://github.com/momsdish-corp/public-devspace.git
+    branch: main
+    subPath: v2/simple-web-test.yaml
