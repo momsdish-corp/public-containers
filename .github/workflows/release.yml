@@ -145,8 +145,12 @@ jobs:
           echo "TAGS=$TAGS"
           
           echo "IMAGE_TAGS=$IMAGE_TAGS" >> $GITHUB_ENV
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
       - name: Build & push the container image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ${{ matrix.CONTAINER_DIR }}
           file: ${{ matrix.CONTAINER_DIR }}/Dockerfile
