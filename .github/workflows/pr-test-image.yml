@@ -38,18 +38,19 @@ jobs:
           echo "Changed dirs: $CHANGED_DIRS"
           
           # Require no spaces in directory names
-          if [[ "$changed_dirs" =~ \  ]]; then
+          if [[ "$CHANGED_DIRS" =~ \  ]]; then
             echo "ERROR: Directory names cannot contain spaces"
             exit 1
           fi
           
           # Filter out non-existing directories
           EXISTING_DIRS=""
-          for dir in $CHANGED_DIRS; do
+          while IFS= read -r dir; do
             if [ -d "$dir" ]; then
               EXISTING_DIRS="$EXISTING_DIRS\n$dir"
             fi
-          done
+          done <<< "$CHANGED_DIRS"
+          echo "Existing dirs: $EXISTING_DIRS"
                    
           # Put each directory in a JSON array
           if [ -z "$EXISTING_DIRS" ]; then
