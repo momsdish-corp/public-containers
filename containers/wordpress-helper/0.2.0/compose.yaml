@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
       platforms:
         - linux/amd64
+        - linux/arm64
     volumes:
       - './test.sh:/usr/local/bin/test.sh:ro'
     entrypoint: [ '/bin/sh', '/usr/local/bin/test.sh' ]
