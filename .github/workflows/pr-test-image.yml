@@ -53,13 +53,13 @@ jobs:
                    
           # Put each directory in a JSON array
           if [ -z "$EXISTING_DIRS" ]; then
-            CHANGED_DIRS_JSON="[]"
+            EXISTING_DIRS_JSON="[]"
           else
-            CHANGED_DIRS_JSON=$(echo -e "$CHANGED_DIRS" | jq -R . | jq -cs .)
+            EXISTING_DIRS_JSON=$(echo -e "$EXISTING_DIRS" | jq -R . | jq -cs .)
           fi
           # Returns /containers/<container>/<version> for each changed directory
-          echo "CHANGED_DIRS_JSON=$CHANGED_DIRS_JSON" >> $GITHUB_OUTPUT
-          echo "Changed dirs JSON: $CHANGED_DIRS_JSON"
+          echo "EXISTING_DIRS_JSON=$EXISTING_DIRS_JSON" >> $GITHUB_OUTPUT
+          echo "Changed dirs JSON: $EXISTING_DIRS_JSON"
   test-container:
     if: ${{ needs.get-changed-containers.outputs.CHANGED_DIRS_JSON != '[]' }}
     needs:
