@@ -52,7 +52,7 @@ RUN echo "deb http://deb.debian.org/debian bullseye-backports main" | tee /etc/a
     install_packages skopeo
 
 # Install AWS CLI based on system architecture
-ARG AWS_CLI_VERSION=2.2.35
+ARG AWS_CLI_VERSION=2.22.35
 RUN if [ "$OS_ARCH" = "amd64" ]; then FILE_SUFFIX="x86_64"; \
     else FILE_SUFFIX="aarch64"; \
     fi && \
