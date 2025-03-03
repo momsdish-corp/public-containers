@@ -8,7 +8,7 @@ This is a helper container for WordPress, providing support for the following co
 - `skopeo` - Docker image inspector 
 - `aws` - For s3 transfers
 - `devspace` - For script aggregation
-- `mydumper` - For database backups (https://github.com/mydumper/mydumper/blob/master/docs/mydumper_usage.rst)
+- `mydumper` - For database backups (https://mydumper.github.io/mydumper/docs/html/mydumper_usage.html)
   - MYSQL_HOST
   - MYSQL_PORT 
   - MYSQL_USER 
@@ -16,7 +16,7 @@ This is a helper container for WordPress, providing support for the following co
   - MYSQL_DATABASE 
   - VERBOSE - 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2. 
   - SQL_MODE
-- `myloader` - For database restores (https://github.com/mydumper/mydumper/blob/master/docs/myloader_usage.rst)
+- `myloader` - For database restores (https://mydumper.github.io/mydumper/docs/html/myloader_usage.html)
   - MYSQL_HOST
   - MYSQL_PORT
   - MYSQL_USER

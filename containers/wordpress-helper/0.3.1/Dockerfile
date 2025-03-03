@@ -68,7 +68,9 @@ RUN if [ "$OS_ARCH" = "amd64" ]; then FILE_SUFFIX="x86_64"; \
 ARG MYDUMPER_VERSION=0.18.2-2
 RUN curl -fL https://github.com/mydumper/mydumper/releases/download/v${MYDUMPER_VERSION}/mydumper_${MYDUMPER_VERSION}.bookworm_${OS_ARCH}.deb -o "/tmp/mydumper.deb" && \
     dpkg -i /tmp/mydumper.deb && \
-    rm -rf /tmp/mydumper.deb
+    rm -rf /tmp/mydumper.deb && \
+    chown -R 1001:root /etc/mydumper.cnf && \
+    chmod 664 /etc/mydumper.cnf
 
 # Install DevSpace CLI based on system architecture
 RUN curl -fL "https://github.com/loft-sh/devspace/releases/latest/download/devspace-linux-${OS_ARCH}" -o "/tmp/devspace" && \
