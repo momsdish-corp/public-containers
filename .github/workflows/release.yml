@@ -111,7 +111,7 @@ jobs:
                       TAGS="$TAGS\n$line"
                     fi
                 fi
-          done < $TAGS_FILE
+          done < <(cat "$TAGS_FILE"; echo)
           
           # Require at least one tag
           if [ -z "$TAGS" ]; then
