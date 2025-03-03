@@ -13,4 +13,4 @@ require_cmds() {
   done
 }
 
-require_cmds curl unzip git yq jq htmlq skopeo aws devspace
+require_cmds curl unzip git yq jq htmlq skopeo aws devspace zstd mydumper myloader

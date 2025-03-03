@@ -22,9 +22,23 @@
 
 FROM docker.io/bitnami/os-shell:12
 
+
 USER root
 
-RUN install_packages curl unzip git yq jq build-essential ca-certificates
+# Limit $OS_ARCH to either amd64 or arm64
+RUN if [ "$OS_ARCH" != "amd64" ] && [ "$OS_ARCH" != "arm64" ]; then \
+      echo "ERROR: Unsupported architecture: $OS_ARCH"; \
+      exit 1; \
+    fi
+
+# Limit $OS_FLAVOUR to debian-12 (bookworm)
+RUN if [ "$OS_FLAVOUR" != "debian-12" ]; then \
+      echo "ERROR: Unsupported OS flavour: $OS_FLAVOUR"; \
+      exit 1; \
+    fi
+
+# libatomic1, libglib2.0-0, libpcre3, zstd - required by mydumper
+RUN install_packages curl unzip git yq jq build-essential ca-certificates libatomic1 libglib2.0-0 libpcre3 zstd
 
 # Install Cargo, requires build-essential (dpkg is outdated)
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
@@ -38,31 +52,26 @@ RUN echo "deb http://deb.debian.org/debian bullseye-backports main" | tee /etc/a
     install_packages skopeo
 
 # Install AWS CLI based on system architecture
-RUN VERSION="2.22.35" && \
-    ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then \
-        FILE_SUFFIX="x86_64"; \
-    elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then \
-        FILE_SUFFIX="aarch64"; \
-    else \
-        echo "Unsupported architecture: $ARCH" && exit 1; \
+ARG AWS_CLI_VERSION=2.2.35
+RUN if [ "$OS_ARCH" = "amd64" ]; then FILE_SUFFIX="x86_64"; \
+    else FILE_SUFFIX="aarch64"; \
     fi && \
     rm -rf /tmp/awscli && \
     mkdir -p /tmp/awscli && \
-    curl -L "https://awscli.amazonaws.com/awscli-exe-linux-${FILE_SUFFIX}-${VERSION}.zip" -o "/tmp/awscli/awscliv2.zip" && \
+    curl -fL "https://awscli.amazonaws.com/awscli-exe-linux-${FILE_SUFFIX}-${AWS_CLI_VERSION}.zip" -o "/tmp/awscli/awscliv2.zip" && \
     unzip -q /tmp/awscli/awscliv2.zip -d /tmp/awscli && \
     /tmp/awscli/aws/install && \
     rm -rf /tmp/awscli
 
+# Instaall MyDumper (MySQL dump/restore utility)
+# - Ref https://github.com/mydumper/mydumper/releases
+ARG MYDUMPER_VERSION=0.18.2-2
+RUN curl -fL https://github.com/mydumper/mydumper/releases/download/v${MYDUMPER_VERSION}/mydumper_${MYDUMPER_VERSION}.bookworm_${OS_ARCH}.deb -o "/tmp/mydumper.deb" && \
+    dpkg -i /tmp/mydumper.deb && \
+    rm -rf /tmp/mydumper.deb
+
 # Install DevSpace CLI based on system architecture
-RUN ARCH=$(uname -m) && \
-    if [ "$ARCH" = "x86_64" ]; then \
-        curl -L "https://github.com/loft-sh/devspace/releases/latest/download/devspace-linux-amd64" -o "/tmp/devspace"; \
-    elif [ "$ARCH" = "aarch64" ]; then \
-        curl -L "https://github.com/loft-sh/devspace/releases/latest/download/devspace-linux-arm64" -o "/tmp/devspace"; \
-    else \
-        echo "Unsupported architecture: $ARCH" && exit 1; \
-    fi && \
+RUN curl -fL "https://github.com/loft-sh/devspace/releases/latest/download/devspace-linux-${OS_ARCH}" -o "/tmp/devspace" && \
     install -c -m 0755 /tmp/devspace /usr/local/bin/devspace && \
     rm -rf /tmp/devspace && \
     mkdir -p /opt/bitnami/app/.devspace && \
