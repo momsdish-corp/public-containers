@@ -1,0 +1,27 @@
+This is a helper container for WordPress, providing support for the following commands:
+- `curl` - Downloader
+- `unzip` - Extraction tool
+- `git` - Version control
+- `yq` - YAML processor
+- `jq` - JSON processor
+- `htmlq` - HTML processor, using CSS selectors (https://github.com/mgdm/htmlq)
+- `skopeo` - Docker image inspector
+- `aws` - For s3 transfers
+- `devspace` - For script aggregation
+- `mydumper` - For database backups (https://mydumper.github.io/mydumper/docs/html/mydumper_usage.html)
+    - MYSQL_HOST
+    - MYSQL_PORT
+    - MYSQL_USER
+    - MYSQL_PASSWORD
+    - MYSQL_DATABASE
+    - VERBOSE - 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2.
+    - SQL_MODE
+- `myloader` - For database restores (https://mydumper.github.io/mydumper/docs/html/myloader_usage.html)
+    - MYSQL_HOST
+    - MYSQL_PORT
+    - MYSQL_USER
+    - MYSQL_PASSWORD
+    - MYSQL_DATABASE
+    - VERBOSE - 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2.
+    - SQL_MODE
+- `zstd` - Allows mydumper to compress backups with zstd
