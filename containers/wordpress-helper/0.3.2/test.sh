@@ -19,4 +19,6 @@ require_cmds curl unzip git yq jq htmlq skopeo aws devspace zstd mydumper myload
 if ! grep -q "^host " /etc/mydumper.cnf; then
   echo "Required 'host' not found in /etc/mydumper.cnf. Fail!"
   exit 1
+else
+  echo "host found in /etc/mydumper.cnf. Pass."
 fi

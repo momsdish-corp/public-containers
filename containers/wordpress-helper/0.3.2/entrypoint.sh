@@ -7,23 +7,23 @@ set -e
 echo "Configuring mydumper..."
 echo "[mydumper]" > /etc/mydumper.cnf
 
-[[ -n "${MYSQL_HOST}" ]] && \
+MYSQL_HOST="${MYSQL_HOST:-mysql}" && \
   echo "Adding host = ${MYSQL_HOST}" && \
   echo "host = ${MYSQL_HOST}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_PORT}"  ]] && \
+MYSQL_PORT="${MYSQL_PORT:-3306}" && \
   echo "Adding port = ${MYSQL_PORT}" && \
   echo "port = ${MYSQL_PORT}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_USER}"  ]] && \
+MYSQL_USER="${MYSQL_USER:-root}" && \
   echo "Adding user = ${MYSQL_USER}" && \
   echo "user = ${MYSQL_USER}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_PASSWORD}"  ]] && \
+MYSQL_PASSWORD="${MYSQL_PASSWORD:-password}" && \
   echo "Adding password = ***" && \
   echo "password = ${MYSQL_PASSWORD}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_DATABASE}"  ]] && \
+MYSQL_DATABASE="${MYSQL_DATABASE:-wordpress}" && \
   echo "Adding database = ${MYSQL_DATABASE}" && \
   echo "database = ${MYSQL_DATABASE}" >> /etc/mydumper.cnf
 
@@ -39,19 +39,15 @@ echo "" >> /etc/mydumper.cnf
 echo "Configuring myloader..."
 echo "[myloader]" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_HOST}" ]] && \
   echo "Adding host = ${MYSQL_HOST}" && \
   echo "host = ${MYSQL_HOST}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_PORT}"  ]] && \
   echo "Adding port = ${MYSQL_PORT}" && \
   echo "port = ${MYSQL_PORT}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_USER}"  ]] && \
   echo "Adding user = ${MYSQL_USER}" && \
   echo "user = ${MYSQL_USER}" >> /etc/mydumper.cnf
 
-[[ -n "${MYSQL_PASSWORD}"  ]] && \
   echo "Adding password = ***" && \
   echo "password = ${MYSQL_PASSWORD}" >> /etc/mydumper.cnf
 
