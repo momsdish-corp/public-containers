@@ -92,9 +92,10 @@ RUN mkdir -p /home/user1001 && \
 # Set the HOME environment variable for user 1001
 ENV HOME=/home/user1001
 
-# Copy Entrypoint
+# Entrypoint
 RUN mkdir -p /opt/bitnami/scripts/custom
 COPY --chown=daemon:root --chmod=644 entrypoint.sh /opt/bitnami/scripts/custom/entrypoint.sh
+ENTRYPOINT ["/opt/bitnami/scripts/custom/entrypoint.sh"]
 
 # Running as user 1001, so that the files and folders it creates in /tmp are editable by the wordpress container
 USER 1001
