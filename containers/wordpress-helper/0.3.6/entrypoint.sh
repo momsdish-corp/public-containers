@@ -27,6 +27,14 @@ echo "[mydumper]" > /etc/mydumper.cnf
 
 echo "" >> /etc/mydumper.cnf
 
+# MyLoader Session Variables
+echo "[mydumper_session_variables]" >> /etc/mydumper.cnf
+
+[[ -n "${SQL_MODE}" ]] && \
+  echo "SQL_MODE = ${SQL_MODE}" >> /etc/mydumper.cnf
+
+echo "" >> /etc/mydumper.cnf
+
 # MyLoader
 # - Ref https://github.com/mydumper/mydumper/blob/master/docs/myloader_usage.rst
 echo "[myloader]" >> /etc/mydumper.cnf
@@ -42,6 +50,17 @@ echo "[myloader]" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_PASSWORD}"  ]] && \
   echo "password = ${MYSQL_PASSWORD}" >> /etc/mydumper.cnf
+
+[[ -n "${QUOTE_CHARACTER}" ]] && \
+  echo "quote_character = ${QUOTE_CHARACTER}" >> /etc/mydumper.cnf
+
+echo "" >> /etc/mydumper.cnf
+
+# MyLoader Session Variables
+echo "[myloader_session_variables]" >> /etc/mydumper.cnf
+
+[[ -n "${SQL_MODE}" ]] && \
+  echo "SQL_MODE = ${SQL_MODE}" >> /etc/mydumper.cnf
 
 echo ""
 exec "$@"
