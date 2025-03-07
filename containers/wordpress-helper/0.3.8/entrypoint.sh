@@ -10,7 +10,7 @@ echo "[mydumper]" > /etc/mydumper.cnf
   echo "host='${MYSQL_HOST}'" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_PORT}"  ]] && \
-  echo "port='${MYSQL_PORT}'" >> /etc/mydumper.cnf
+  echo "port=${MYSQL_PORT}" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_USER}"  ]] && \
   echo "user='${MYSQL_USER}'" >> /etc/mydumper.cnf
@@ -43,7 +43,7 @@ echo "[myloader]" >> /etc/mydumper.cnf
   echo "host='${MYSQL_HOST}'" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_PORT}"  ]] && \
-  echo "port='${MYSQL_PORT}'" >> /etc/mydumper.cnf
+  echo "port=${MYSQL_PORT}" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_USER}"  ]] && \
   echo "user='${MYSQL_USER}'" >> /etc/mydumper.cnf
