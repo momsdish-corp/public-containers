@@ -4,10 +4,13 @@ name: devspace
 imports:
   - git: https://github.com/momsdish-corp/public-devspace.git
     branch: main
+    subPath: v2/image.yaml
+  - git: https://github.com/momsdish-corp/public-devspace.git
+    branch: main
     subPath: v2/s3.yaml
   - git: https://github.com/momsdish-corp/public-devspace.git
     branch: main
-    subPath: v2/test-website.yaml
+    subPath: v2/website-test.yaml
   - git: https://github.com/momsdish-corp/public-devspace.git
     branch: main
     subPath: v2/wp.yaml
