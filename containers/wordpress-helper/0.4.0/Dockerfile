@@ -65,7 +65,7 @@ RUN if [ "$OS_ARCH" = "amd64" ]; then FILE_SUFFIX="x86_64"; \
 
 # Instaall MyDumper (MySQL dump/restore utility)
 # - Ref https://github.com/mydumper/mydumper/releases
-ARG MYDUMPER_VERSION=0.18.2-2
+ARG MYDUMPER_VERSION=0.19.1-3
 RUN curl -fL https://github.com/mydumper/mydumper/releases/download/v${MYDUMPER_VERSION}/mydumper_${MYDUMPER_VERSION}.bookworm_${OS_ARCH}.deb -o "/tmp/mydumper.deb" && \
     dpkg -i /tmp/mydumper.deb && \
     rm -rf /tmp/mydumper.deb && \
