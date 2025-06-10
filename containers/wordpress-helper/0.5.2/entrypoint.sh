@@ -19,7 +19,7 @@ echo "[mydumper]" > /etc/mydumper.cnf
   echo "password = ${MYSQL_PASSWORD}" >> /etc/mydumper.cnf
 
 [[ -n "${MYSQL_DATABASE}"  ]] && \
-  echo "database= ${MYSQL_DATABASE} " >> /etc/mydumper.cnf
+  echo "database = ${MYSQL_DATABASE}" >> /etc/mydumper.cnf
 
 # The verbosity of messages. 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2.
 [[ -n "${VERBOSE}" ]] && \
