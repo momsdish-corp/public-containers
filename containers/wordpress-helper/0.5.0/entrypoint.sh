@@ -30,8 +30,8 @@ echo "" >> /etc/mydumper.cnf
 # MyLoader Session Variables
 echo "[mydumper_session_variables]" >> /etc/mydumper.cnf
 
-[[ -n "${SQL_MODE}" ]] && \
-  echo "SQL_MODE='${SQL_MODE}'" >> /etc/mydumper.cnf
+[[ -n "${MYDUMPER_SQL_MODE}" ]] && \
+  echo "SQL_MODE='${MYDUMPER_SQL_MODE}'" >> /etc/mydumper.cnf
 
 echo "" >> /etc/mydumper.cnf
 
@@ -59,8 +59,8 @@ echo "" >> /etc/mydumper.cnf
 # MyLoader Session Variables
 echo "[myloader_session_variables]" >> /etc/mydumper.cnf
 
-[[ -n "${SQL_MODE}" ]] && \
-  echo "SQL_MODE='${SQL_MODE}'" >> /etc/mydumper.cnf
+[[ -n "${MYLOADER_SQL_MODE}" ]] && \
+  echo "SQL_MODE='${MYLOADER_SQL_MODE}'" >> /etc/mydumper.cnf
 
 echo ""
 exec "$@"
