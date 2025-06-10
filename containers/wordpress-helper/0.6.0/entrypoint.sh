@@ -27,11 +27,17 @@ echo "[mydumper]" > /etc/mydumper.cnf
 
 echo "" >> /etc/mydumper.cnf
 
-# MyLoader Session Variables
-echo "[mydumper_session_variables]" >> /etc/mydumper.cnf
+# MyDumper Session Variables
+[[ -n "${MYDUMPER_SESSION_SQL_MODE}" ]] && \
+  echo "[mydumper_session_variables]" >> /etc/mydumper.cnf && \
+  echo "sql_mode = ${MYDUMPER_SESSION_SQL_MODE}" >> /etc/mydumper.cnf && \
+  echo "" >> /etc/mydumper.cnf
 
-[[ -n "${MYDUMPER_SQL_MODE}" ]] && \
-  echo "sql_mode = ${MYDUMPER_SQL_MODE}" >> /etc/mydumper.cnf
+# MyLoader Global Variables
+[[ -n "${MYLOADER_GLOBAL_SQL_MODE}" ]] && \
+  echo "[myloader_global_variables]" >> /etc/mydumper.cnf && \
+  echo "sql_mode = ${MYLOADER_GLOBAL_SQL_MODE}" >> /etc/mydumper.cnf && \
+  echo "" >> /etc/mydumper.cnf
 
 echo "" >> /etc/mydumper.cnf
 
@@ -57,10 +63,16 @@ echo "[myloader]" >> /etc/mydumper.cnf
 echo "" >> /etc/mydumper.cnf
 
 # MyLoader Session Variables
-echo "[myloader_session_variables]" >> /etc/mydumper.cnf
+[[ -n "${MYLOADER_SESSION_SQL_MODE}" ]] && \
+  echo "[myloader_session_variables]" >> /etc/mydumper.cnf && \
+  echo "sql_mode = ${MYLOADER_SESSION_SQL_MODE}" >> /etc/mydumper.cnf && \
+  echo "" >> /etc/mydumper.cnf
 
-[[ -n "${MYLOADER_SQL_MODE}" ]] && \
-  echo "sql_mode = ${MYLOADER_SQL_MODE}" >> /etc/mydumper.cnf
+# MyLoader Global Variables
+[[ -n "${MYLOADER_GLOBAL_SQL_MODE}" ]] && \
+  echo "[myloader_global_variables]" >> /etc/mydumper.cnf && \
+  echo "sql_mode = ${MYLOADER_GLOBAL_SQL_MODE}" >> /etc/mydumper.cnf && \
+  echo "" >> /etc/mydumper.cnf
 
 echo ""
 exec "$@"
