@@ -15,7 +15,8 @@ This is a helper container for WordPress, providing support for the following co
     - MYSQL_PASSWORD
     - MYSQL_DATABASE
     - VERBOSE - 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2.
-    - SQL_MODE
+    - MYDUMPER_SESSION_SQL_MODE
+    - MYLOADER_GLOBAL_SQL_MODE
 - `myloader` - For database restores (https://mydumper.github.io/mydumper/docs/html/myloader_usage.html)
     - MYSQL_HOST
     - MYSQL_PORT
@@ -23,5 +24,6 @@ This is a helper container for WordPress, providing support for the following co
     - MYSQL_PASSWORD
     - MYSQL_DATABASE
     - VERBOSE - 0 = silent, 1 = errors, 2 = warnings, 3 = info. Default is 2.
-    - SQL_MODE
+    - MYLOADER_SESSION_SQL_MODE
+    - MYLOADER_GLOBAL_SQL_MODE
 - `zstd` - Allows mydumper to compress backups with zstd
